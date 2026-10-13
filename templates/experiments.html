@@ -6,19 +6,57 @@
 {% block page_header_desc %}10 Hands-on AI Experiments: Search, Logic, Fuzzy Inference, Neural Networks & Language Models{% endblock %}
 
 {% block content %}
-<!-- Tab Navigation Bar for the 10 Experiments -->
-<div class="nav-tabs-rm" id="experiment-tabs">
-  <button class="nav-tab-btn active" onclick="switchExperimentTab('exp1')" id="tab-btn-exp1">Exp 1: PEAS & Formulation</button>
-  <button class="nav-tab-btn" onclick="switchExperimentTab('exp2')" id="tab-btn-exp2">Exp 2: Prolog Logic</button>
-  <button class="nav-tab-btn" onclick="switchExperimentTab('exp3')" id="tab-btn-exp3">Exp 3: BFS & DFS Search</button>
-  <button class="nav-tab-btn" onclick="switchExperimentTab('exp4')" id="tab-btn-exp4">Exp 4: A* Informed Search</button>
-  <button class="nav-tab-btn" onclick="switchExperimentTab('exp5')" id="tab-btn-exp5">Exp 5: Minimax Tree</button>
-  <button class="nav-tab-btn" onclick="switchExperimentTab('exp6')" id="tab-btn-exp6">Exp 6: Fuzzy Controller</button>
-  <button class="nav-tab-btn" onclick="switchExperimentTab('exp7')" id="tab-btn-exp7">Exp 7: Mamdani vs Sugeno</button>
-  <button class="nav-tab-btn" onclick="switchExperimentTab('exp8')" id="tab-btn-exp8">Exp 8: Neuro-Fuzzy Hybrid</button>
-  <button class="nav-tab-btn" onclick="switchExperimentTab('exp9')" id="tab-btn-exp9">Exp 9: Supervised & Unsupervised</button>
-  <button class="nav-tab-btn" onclick="switchExperimentTab('exp10')" id="tab-btn-exp10">Exp 10: Language Models</button>
-</div>
+<!-- Experiment Suite Navigation Hub -->
+<section class="exp-navigator-panel">
+  <div class="exp-nav-header">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="badge-rm optimal"><i class="bi bi-grid-fill"></i> Experiment Modules (1 to 10)</span>
+      <span style="font-size: 12px; color: var(--rm-text-muted);">All 10 labs accessible without horizontal clipping:</span>
+    </div>
+
+    <!-- Quick Category Filter Chips -->
+    <div class="exp-category-filter">
+      <button type="button" class="category-chip active" onclick="filterExperimentCategory('all', this)">All Labs (10)</button>
+      <button type="button" class="category-chip" onclick="filterExperimentCategory('search', this)">1–5: Search & Logic</button>
+      <button type="button" class="category-chip" onclick="filterExperimentCategory('fuzzy', this)">6–8: Fuzzy Systems</button>
+      <button type="button" class="category-chip" onclick="filterExperimentCategory('learning', this)">9–10: ML & NLP</button>
+    </div>
+  </div>
+
+  <!-- Wrapped Experiment Pill Buttons -->
+  <div class="nav-tabs-rm" id="experiment-tabs">
+    <button type="button" class="nav-tab-btn active" data-category="search" onclick="switchExperimentTab('exp1')" id="tab-btn-exp1">
+      <span class="tab-num">01</span><span>PEAS Formulation</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-category="search" onclick="switchExperimentTab('exp2')" id="tab-btn-exp2">
+      <span class="tab-num">02</span><span>Prolog Logic</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-category="search" onclick="switchExperimentTab('exp3')" id="tab-btn-exp3">
+      <span class="tab-num">03</span><span>BFS & DFS Search</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-category="search" onclick="switchExperimentTab('exp4')" id="tab-btn-exp4">
+      <span class="tab-num">04</span><span>A* Informed Router</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-category="search" onclick="switchExperimentTab('exp5')" id="tab-btn-exp5">
+      <span class="tab-num">05</span><span>Minimax Decision Tree</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-category="fuzzy" onclick="switchExperimentTab('exp6')" id="tab-btn-exp6">
+      <span class="tab-num">06</span><span>Fuzzy Controller</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-category="fuzzy" onclick="switchExperimentTab('exp7')" id="tab-btn-exp7">
+      <span class="tab-num">07</span><span>Mamdani vs Sugeno</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-category="fuzzy" onclick="switchExperimentTab('exp8')" id="tab-btn-exp8">
+      <span class="tab-num">08</span><span>Neuro-Fuzzy Hybrid</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-category="learning" onclick="switchExperimentTab('exp9')" id="tab-btn-exp9">
+      <span class="tab-num">09</span><span>Supervised & Unsupervised</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-category="learning" onclick="switchExperimentTab('exp10')" id="tab-btn-exp10">
+      <span class="tab-num">10</span><span>Statistical NLP Models</span>
+    </button>
+  </div>
+</section>
 
 <!-- ==========================================================================
      EXPERIMENT 1: PEAS AND PROBLEM FORMULATION
@@ -110,7 +148,7 @@
       Evaluates declarative Horn clauses (facts and rules) governing road connectivity, high-priority dispatch eligibility, and blocked corridor avoidance.
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div class="exp-split-layout">
       <!-- Query Controls -->
       <div>
         <div class="form-group">
@@ -173,7 +211,7 @@
       Examines genuine Breadth-First Search (FIFO queue, guarantees fewest edges) and Depth-First Search (LIFO stack, dives deep before backtracking; does NOT guarantee shortest path).
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+    <div class="exp-split-layout">
       <div>
         <div class="form-group">
           <label class="form-label">Algorithm Choice:</label>
@@ -248,7 +286,7 @@
       Evaluates nodes using priority function <strong>f(n) = g(n) + h(n)</strong>, where g(n) is cumulative travel time and h(n) is the admissible straight-line heuristic to Goal G.
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+    <div class="exp-split-layout">
       <div>
         <div class="form-group">
           <label class="form-label">Start Hub:</label>
@@ -317,7 +355,7 @@
       Educational game-theoretic simulation: MAX is the Dispatcher choosing high-level dispatch corridors; MIN is the adverse traffic/weather environment choosing worst-case chokepoints.
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div class="exp-split-layout">
       <div>
         <h4 style="font-size: 14px; margin-bottom: 10px;">Adjust Leaf Utilities (Payoffs to Dispatcher):</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
@@ -383,7 +421,7 @@
       Fuzzy Inference System classifying continuous road conditions into linguistic categories (Low, Medium, High) and defuzzifying a crisp delay score (0–100).
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div class="exp-split-layout">
       <div>
         <div class="form-group">
           <label class="form-label">Congestion Level (%): <span class="mono-data" id="exp6-cong-val">65%</span></label>
@@ -442,7 +480,7 @@
       Direct comparison between <strong>Mamdani</strong> (linguistic output sets & continuous centroid integration) and <strong>Sugeno</strong> (crisp linear functions & weighted average defuzzification) on an identical route scenario.
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+    <div class="exp-split-layout">
       <div>
         <div class="form-group">
           <label class="form-label">Route Distance (5 to 50 km): <span class="mono-data" id="exp7-dist-val">28 km</span></label>
@@ -457,14 +495,14 @@
         </button>
       </div>
 
-      <div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
-          <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 8px; border-left: 3px solid var(--rm-teal);">
+      <div style="min-width: 0;">
+        <div class="exp-metric-grid-2">
+          <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 8px; border-left: 3px solid var(--rm-teal); min-width: 0;">
             <div style="font-size: 12px; font-weight: 600;">Mamdani Output (Centroid)</div>
             <div class="mono-data" style="font-size: 22px; font-weight: 700; color: var(--rm-teal);" id="exp7-mamdani-out">-- min</div>
             <div style="font-size: 11px; color: var(--rm-text-muted); margin-top: 4px;">Fuzzy output membership set</div>
           </div>
-          <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 8px; border-left: 3px solid var(--rm-cyan);">
+          <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 8px; border-left: 3px solid var(--rm-cyan); min-width: 0;">
             <div style="font-size: 12px; font-weight: 600;">Sugeno Output (Weighted Avg)</div>
             <div class="mono-data" style="font-size: 22px; font-weight: 700; color: var(--rm-cyan);" id="exp7-sugeno-out">-- min</div>
             <div style="font-size: 11px; color: var(--rm-text-muted); margin-top: 4px;">Crisp linear equations z = a*x + b*y + c</div>
@@ -495,7 +533,7 @@
       Synergizes an Artificial Neural Network (learning baseline transit delay from synthetic dispatch data) with a Fuzzy Supervisory Layer applying contextual risk rules.
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+    <div class="exp-split-layout">
       <div>
         <div class="form-group">
           <label class="form-label">Distance (km):</label>
@@ -558,7 +596,7 @@
       Examines two core neural architectures: <strong>Supervised Rosenblatt Perceptron</strong> (classification with labeled feedback) and <strong>Unsupervised Competitive Learning</strong> (clustering unlabeled corridor observations).
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div class="exp-split-layout">
       <!-- Supervised -->
       <div style="border: 1px solid var(--rm-border); padding: 16px; border-radius: 10px;">
         <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--rm-teal);">
@@ -624,7 +662,7 @@
       Lightweight statistical text prediction on local logistics corpus: <strong>Micro Model (Bigram: N=2)</strong> and <strong>Small Model (Trigram: N=3)</strong> with conditional probability counting.
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+    <div class="exp-split-layout">
       <div>
         <div class="form-group">
           <label class="form-label">Seed Context Phrase:</label>
@@ -662,7 +700,43 @@
     const activePane = document.getElementById('pane-' + expId);
     if (activeBtn) activeBtn.classList.add('active');
     if (activePane) activePane.style.display = 'block';
+
+    // Optional URL hash update
+    if (history.replaceState) {
+      history.replaceState(null, null, '#' + expId);
+    }
   }
+
+  function filterExperimentCategory(category, buttonEl) {
+    document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+    if (buttonEl) buttonEl.classList.add('active');
+
+    const tabButtons = document.querySelectorAll('.nav-tab-btn');
+    let firstVisibleTab = null;
+
+    tabButtons.forEach(btn => {
+      const cat = btn.getAttribute('data-category');
+      if (category === 'all' || cat === category) {
+        btn.style.display = 'inline-flex';
+        if (!firstVisibleTab) firstVisibleTab = btn;
+      } else {
+        btn.style.display = 'none';
+      }
+    });
+
+    const currentActive = document.querySelector('.nav-tab-btn.active');
+    if (currentActive && currentActive.style.display === 'none' && firstVisibleTab) {
+      firstVisibleTab.click();
+    }
+  }
+
+  // Handle URL hash on load (e.g. #exp7)
+  document.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash && document.getElementById('pane-' + hash)) {
+      switchExperimentTab(hash);
+    }
+  });
 </script>
 <script src="{{ url_for('static', filename='js/experiments.js') }}"></script>
 {% endblock %}
