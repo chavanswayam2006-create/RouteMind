@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}RouteMind AI — Intelligent Logistics Dashboard{% endblock %}
+
+{% block page_header_title %}Logistics Dispatch Deck{% endblock %}
+{% block page_header_desc %}Real-time Network Telemetry, Graph-Search Pathfinding & Algorithmic Routing{% endblock %}
+
+{% block content %}
+<!-- 1. High-Priority Parcel Status Card -->
+<section class="parcel-status-card" id="parcel-status-section">
+  <div class="card-header-flex" style="border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="badge-rm optimal">
+        <i class="bi bi-broadcast"></i> ACTIVE MANIFEST
+      </span>
+      <h3 style="color: #ffffff; font-size: 17px; margin: 0;">Parcel PKG-901 (Medical Emergency Supply)</h3>
+    </div>
+    <span class="badge-rm warning" id="parcel-sla-badge">
+      <i class="bi bi-clock-history"></i> Priority SLA: 60 min
+    </span>
+  </div>
+  
+  <div class="parcel-meta-grid">
+    <div class="meta-box">
+      <div class="label">Origin Warehouse</div>
+      <div class="val" style="color: #34d399;">A: Central Dispatch</div>
+    </div>
+    <div class="meta-box">
+      <div class="label">Final Destination</div>
+      <div class="val" style="color: #38bdf8;">G: Final Delivery Hub</div>
+    </div>
+    <div class="meta-box">
+      <div class="label">Cargo Weight & Class</div>
+      <div class="val">4.5 kg | High Priority</div>
+    </div>
+    <div class="meta-box">
+      <div class="label">Dispatch Routing State</div>
+      <div class="val" id="dispatch-state-text" style="color: #facc15;">Ready for Compute</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Main Operational Layout (2-Column Split: 7 / 5 Ratio) -->
+<div style="display: grid; grid-template-columns: 7fr 5fr; gap: 24px;">
+  
+  <!-- LEFT COLUMN: Graph Visualization & Active Route Metrics -->
+  <div>
+    <!-- Interactive Network Canvas -->
+    <div class="card-panel" style="padding: 16px;">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-diagram-3 text-teal"></i>
+          <span>City Distribution Network Topology</span>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span class="badge-rm info" id="active-roads-count">12 Corridors</span>
+          <span class="badge-rm danger" id="blocked-roads-count">0 Blocked</span>
+        </div>
+      </div>
+      
+      <div class="network-canvas-wrapper">
+        <div class="canvas-toolbar">
+          <button class="canvas-btn" onclick="RouteMindNetwork.zoomIn()" title="Zoom In"><i class="bi bi-zoom-in"></i></button>
+          <button class="canvas-btn" onclick="RouteMindNetwork.zoomOut()" title="Zoom Out"><i class="bi bi-zoom-out"></i></button>
+          <button class="canvas-btn" onclick="RouteMindNetwork.fitView()" title="Fit View"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="canvas-btn" onclick="RouteMindNetwork.resetLayout()" title="Reset Positions"><i class="bi bi-arrow-repeat"></i></button>
+        </div>
+        <div id="cy-network"></div>
+        <div class="canvas-legend">
+          <div class="legend-item"><span class="legend-swatch" style="background: #10b981;"></span> Start Hub (A)</div>
+          <div class="legend-item"><span class="legend-swatch" style="background: #06b6d4;"></span> Goal Hub (G)</div>
+          <div class="legend-item"><span class="legend-swatch" style="background: #0d9488;"></span> Optimal Route</div>
+          <div class="legend-item"><span class="legend-swatch" style="background: #ef4444;"></span> Blocked Segment</div>
+        </div>
+      </div>
+      <p style="font-size: 11px; color: var(--rm-text-muted); margin-top: 8px;">
+        <i class="bi bi-info-circle"></i> Click any road edge on the map or in the table below to toggle its blocked/open status instantly.
+      </p>
+    </div>
+
+    <!-- Active Route Telemetry & Stepper -->
+    <div class="card-panel" id="route-result-card">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-signpost-split text-teal"></i>
+          <span>Calculated Route Telemetry</span>
+        </div>
+        <span class="badge-rm optimal" id="route-status-pill">Awaiting Calculation</span>
+      </div>
+
+      <!-- Recommendation Banner -->
+      <div class="recommendation-banner" id="recommendation-banner-box">
+        <i class="bi bi-stars"></i>
+        <div>
+          <h4 id="recommendation-banner-title">Select Parameters & Run Dispatch</h4>
+          <p id="recommendation-banner-body">
+            Choose origin, destination, and pathfinding algorithm on the right panel, then click <strong>Find Best Route</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Telemetry Metric Cards -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px;">
+        <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 10px; border: 1px solid var(--rm-border);">
+          <div style="font-size: 11px; color: var(--rm-text-muted); font-weight: 600; text-transform: uppercase;">Total Travel Time</div>
+          <div class="mono-data" style="font-size: 22px; font-weight: 700; color: var(--rm-teal);" id="res-time">-- min</div>
+        </div>
+        <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 10px; border: 1px solid var(--rm-border);">
+          <div style="font-size: 11px; color: var(--rm-text-muted); font-weight: 600; text-transform: uppercase;">Total Distance</div>
+          <div class="mono-data" style="font-size: 22px; font-weight: 700; color: var(--rm-text-heading);" id="res-dist">-- km</div>
+        </div>
+        <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 10px; border: 1px solid var(--rm-border);">
+          <div style="font-size: 11px; color: var(--rm-text-muted); font-weight: 600; text-transform: uppercase;">Route Cost</div>
+          <div class="mono-data" style="font-size: 22px; font-weight: 700; color: var(--rm-text-heading);" id="res-cost">--</div>
+        </div>
+        <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 10px; border: 1px solid var(--rm-border);">
+          <div style="font-size: 11px; color: var(--rm-text-muted); font-weight: 600; text-transform: uppercase;">Nodes Explored</div>
+          <div class="mono-data" style="font-size: 22px; font-weight: 700; color: var(--rm-text-heading);" id="res-explored">--</div>
+        </div>
+      </div>
+
+      <!-- Route Stepper -->
+      <div>
+        <label class="form-label" style="font-size: 12px;">Waypoint Traversal Sequence:</label>
+        <div id="route-stepper-container" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 14px; background: var(--rm-surface-subtle); border-radius: 8px; border: 1px solid var(--rm-border);">
+          <span style="color: var(--rm-text-muted); font-size: 13px;">No active route calculated yet.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: Dispatch Planning Form, Quick Blocks & Activity Feed -->
+  <div>
+    <!-- Route Planning Form -->
+    <div class="card-panel">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-sliders text-teal"></i>
+          <span>Dispatch Control Panel</span>
+        </div>
+        <span class="badge-rm optimal">AI Router</span>
+      </div>
+
+      <form id="route-planning-form" onsubmit="event.preventDefault(); RouteMindApp.findBestRoute();">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="select-start-node">Origin Warehouse</label>
+            <select class="form-select" id="select-start-node">
+              {% for node in network.nodes %}
+              <option value="{{ node.id }}" {% if node.id == 'A' %}selected{% endif %}>
+                Hub {{ node.id }} - {{ node.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="select-goal-node">Destination Hub</label>
+            <select class="form-select" id="select-goal-node">
+              {% for node in network.nodes %}
+              <option value="{{ node.id }}" {% if node.id == 'G' %}selected{% endif %}>
+                Hub {{ node.id }} - {{ node.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="select-algorithm">Search Algorithm</label>
+          <select class="form-select" id="select-algorithm">
+            <option value="astar" selected>A* Informed Search (Optimal Travel Time - f = g + h)</option>
+            <option value="bfs">Breadth-First Search (Fewest Road Segments)</option>
+            <option value="dfs">Depth-First Search (Branch Exploration / Non-optimal)</option>
+            <option value="compare_all">Side-by-Side Multi-Algorithm Benchmark (BFS vs DFS vs A*)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-rm-primary" id="btn-find-best-route" style="width: 100%; justify-content: center; height: 44px; margin-top: 4px;">
+          <i class="bi bi-compass"></i> Find Best Route
+        </button>
+      </form>
+    </div>
+
+    <!-- Quick Road Closure Simulator -->
+    <div class="card-panel">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-cone-striped" style="color: #f59e0b;"></i>
+          <span>Road Closure & Chokepoint Controls</span>
+        </div>
+        <button class="btn-rm-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="RouteMindApp.unblockAllRoads()">
+          Clear All Blocks
+        </button>
+      </div>
+      <p style="font-size: 12px; color: var(--rm-text-muted); margin-bottom: 12px;">
+        Toggle road blockages below to test autonomous re-routing around chokepoints:
+      </p>
+
+      <div style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;" id="road-toggle-list">
+        {% for r in network.roads %}
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: var(--rm-surface-subtle); border-radius: 6px; font-size: 12px;">
+          <div>
+            <strong>{{ r.id }}</strong> ({{ r.distance_km }} km, {{ r.time_min }} min, {{ r.congestion_pct }}% cong)
+          </div>
+          <button class="badge-rm {% if r.is_blocked %}danger{% else %}success{% endif %}" 
+                  style="cursor: pointer; border: none;"
+                  id="toggle-road-{{ r.id }}"
+                  onclick="RouteMindApp.toggleRoadBlock('{{ r.id }}')">
+            {{ 'BLOCKED' if r.is_blocked else 'OPEN' }}
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Recent Simulation Activities -->
+    <div class="card-panel">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-clock-history text-teal"></i>
+          <span>Recent Dispatch Activity Log</span>
+        </div>
+      </div>
+      <div class="activity-feed" id="activity-feed-container">
+        {% for act in activities %}
+        <div class="activity-item">
+          <span class="badge-rm info" style="font-size: 10px;">{{ act.badge }}</span>
+          <div class="desc">
+            <div style="font-weight: 600; color: var(--rm-text-heading);">{{ act.action }}</div>
+            <div style="font-size: 12px; color: var(--rm-text-muted);">{{ act.detail }}</div>
+          </div>
+          <span class="time">{{ act.timestamp }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 3. Multi-Algorithm Benchmark Comparison Section (BFS vs DFS vs A*) -->
+<section class="card-panel" style="margin-top: 24px;">
+  <div class="card-header-flex">
+    <div class="card-title">
+      <i class="bi bi-bar-chart-fill text-teal"></i>
+      <span>Algorithm Benchmark & Comparative Analysis (BFS vs DFS vs A*)</span>
+    </div>
+    <button class="btn-rm-secondary" onclick="RouteMindApp.runBenchmark()">
+      <i class="bi bi-play-fill"></i> Run Comprehensive Benchmark
+    </button>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 3fr 2fr; gap: 24px; align-items: start;">
+    <!-- Comparison Table -->
+    <div>
+      <table class="table-rm" id="benchmark-table">
+        <thead>
+          <tr>
+            <th>Algorithm</th>
+            <th>Type</th>
+            <th>Path Discovered</th>
+            <th>Hops</th>
+            <th>Distance</th>
+            <th>Est. Time</th>
+            <th>Cost</th>
+            <th>Nodes Explored</th>
+          </tr>
+        </thead>
+        <tbody id="benchmark-table-body">
+          <tr>
+            <td colspan="8" style="text-align: center; color: var(--rm-text-muted); padding: 24px;">
+              Click "Run Comprehensive Benchmark" or "Find Best Route (Compare All)" to evaluate search strategies.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Benchmark Chart -->
+    <div style="background: var(--rm-surface-subtle); padding: 16px; border-radius: 10px; border: 1px solid var(--rm-border);">
+      <h4 style="font-size: 13px; margin-bottom: 12px; color: var(--rm-text-heading);">
+        <i class="bi bi-graph-up"></i> Transit Time vs Exploration Efficiency
+      </h4>
+      <div style="height: 220px; position: relative;">
+        <canvas id="benchmark-chart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,668 @@
+{% extends "base.html" %}
+
+{% block title %}RouteMind AI — AI Experiment Modules (1 to 10){% endblock %}
+
+{% block page_header_title %}Artificial Intelligence Laboratory Suite{% endblock %}
+{% block page_header_desc %}10 Hands-on AI Experiments: Search, Logic, Fuzzy Inference, Neural Networks & Language Models{% endblock %}
+
+{% block content %}
+<!-- Tab Navigation Bar for the 10 Experiments -->
+<div class="nav-tabs-rm" id="experiment-tabs">
+  <button class="nav-tab-btn active" onclick="switchExperimentTab('exp1')" id="tab-btn-exp1">Exp 1: PEAS & Formulation</button>
+  <button class="nav-tab-btn" onclick="switchExperimentTab('exp2')" id="tab-btn-exp2">Exp 2: Prolog Logic</button>
+  <button class="nav-tab-btn" onclick="switchExperimentTab('exp3')" id="tab-btn-exp3">Exp 3: BFS & DFS Search</button>
+  <button class="nav-tab-btn" onclick="switchExperimentTab('exp4')" id="tab-btn-exp4">Exp 4: A* Informed Search</button>
+  <button class="nav-tab-btn" onclick="switchExperimentTab('exp5')" id="tab-btn-exp5">Exp 5: Minimax Tree</button>
+  <button class="nav-tab-btn" onclick="switchExperimentTab('exp6')" id="tab-btn-exp6">Exp 6: Fuzzy Controller</button>
+  <button class="nav-tab-btn" onclick="switchExperimentTab('exp7')" id="tab-btn-exp7">Exp 7: Mamdani vs Sugeno</button>
+  <button class="nav-tab-btn" onclick="switchExperimentTab('exp8')" id="tab-btn-exp8">Exp 8: Neuro-Fuzzy Hybrid</button>
+  <button class="nav-tab-btn" onclick="switchExperimentTab('exp9')" id="tab-btn-exp9">Exp 9: Supervised & Unsupervised</button>
+  <button class="nav-tab-btn" onclick="switchExperimentTab('exp10')" id="tab-btn-exp10">Exp 10: Language Models</button>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 1: PEAS AND PROBLEM FORMULATION
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp1">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-diagram-2-fill text-teal"></i>
+        <span>Experiment 1 — PEAS & Formal Problem Formulation</span>
+      </div>
+      <button class="btn-rm-primary" onclick="RouteMindExps.runExp1()">
+        <i class="bi bi-play-circle"></i> Run Formulation Simulation
+      </button>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 20px;">
+      Defines the AI agent using the standard Russell & Norvig PEAS taxonomy and generates formal state-space transitions from Start Node A to Goal Node G.
+    </p>
+
+    <!-- PEAS Matrix Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px;">
+      <div style="background: var(--rm-surface-subtle); padding: 16px; border-radius: 10px; border-left: 4px solid var(--rm-teal);">
+        <h4 style="font-size: 14px; margin-bottom: 8px;"><i class="bi bi-speedometer2"></i> Performance Measure (P)</h4>
+        <ul style="font-size: 12px; color: var(--rm-text-body); padding-left: 18px; line-height: 1.6;">
+          <li>Minimize total transit duration (minutes).</li>
+          <li>Minimize route cost with congestion multipliers.</li>
+          <li>Zero traversal of blocked road corridors (hard constraint).</li>
+          <li>100% on-time SLA fulfillment for high-priority packages.</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--rm-surface-subtle); padding: 16px; border-radius: 10px; border-left: 4px solid var(--rm-cyan);">
+        <h4 style="font-size: 14px; margin-bottom: 8px;"><i class="bi bi-geo-alt-fill"></i> Environment (E)</h4>
+        <ul style="font-size: 12px; color: var(--rm-text-body); padding-left: 18px; line-height: 1.6;">
+          <li>7 interconnected city distribution hubs (A to G).</li>
+          <li>Distance (km), travel times (min), and dynamic congestion (0-100%).</li>
+          <li>Fully observable, deterministic transitions, sequential decision space.</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--rm-surface-subtle); padding: 16px; border-radius: 10px; border-left: 4px solid var(--rm-emerald);">
+        <h4 style="font-size: 14px; margin-bottom: 8px;"><i class="bi bi-gear-fill"></i> Actuators (A)</h4>
+        <ul style="font-size: 12px; color: var(--rm-text-body); padding-left: 18px; line-height: 1.6;">
+          <li>Dispatch authorization commands.</li>
+          <li>Next-hop route selector (A &rarr; D &rarr; E &rarr; G).</li>
+          <li>Dynamic detour re-routing trigger upon incident detection.</li>
+          <li>ETA telemetry updates to destination docking bay.</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--rm-surface-subtle); padding: 16px; border-radius: 10px; border-left: 4px solid var(--rm-amber);">
+        <h4 style="font-size: 14px; margin-bottom: 8px;"><i class="bi bi-broadcast-pin"></i> Sensors (S)</h4>
+        <ul style="font-size: 12px; color: var(--rm-text-body); padding-left: 18px; line-height: 1.6;">
+          <li>Road obstruction / closure barrier indicators.</li>
+          <li>Live corridor congestion sensors (0-100%).</li>
+          <li>GPS hub-arrival geofence confirmations.</li>
+          <li>Estimated transit time telemetric sensors.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Output trace -->
+    <div id="exp1-output-container" style="display: none;">
+      <h4 style="font-size: 14px; margin-bottom: 10px;">State-Space Goal Test Traversal Trace:</h4>
+      <div id="exp1-trace-table-wrapper" style="overflow-x: auto;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 2: PROLOG RULE-BASED REASONING
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp2" style="display: none;">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-file-earmark-code-fill text-teal"></i>
+        <span>Experiment 2 — Prolog Rule-Based Reasoning Engine</span>
+      </div>
+      <div>
+        {% if swipl_available %}
+        <span class="badge-rm success"><i class="bi bi-check-circle"></i> SWI-Prolog (swipl) Detected</span>
+        {% else %}
+        <span class="badge-rm warning"><i class="bi bi-cpu"></i> Python Rule Engine (SWI-Prolog Fallback Simulation)</span>
+        {% endif %}
+      </div>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 16px;">
+      Evaluates declarative Horn clauses (facts and rules) governing road connectivity, high-priority dispatch eligibility, and blocked corridor avoidance.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <!-- Query Controls -->
+      <div>
+        <div class="form-group">
+          <label class="form-label">Select Logical Query to Evaluate:</label>
+          <select class="form-select" id="exp2-query-type" onchange="RouteMindExps.onExp2QueryChange()">
+            <option value="available_roads">?- available_road(Origin, Y, Dist, Time, Cong). [Unblocked Roads from Hub]</option>
+            <option value="can_dispatch">?- can_dispatch(From, To, Priority). [Dispatch Authorization Rule]</option>
+            <option value="find_paths">?- connected_path(Start, Goal, Path). [Recursive Path Deduction]</option>
+            <option value="blocked_roads">?- is_blocked(X, Y). [Safety Invariant Avoidance]</option>
+          </select>
+        </div>
+
+        <div id="exp2-params-box" style="margin-bottom: 16px;">
+          <!-- Dynamic param inputs inserted by JS -->
+          <div class="form-group">
+            <label class="form-label">Origin Hub:</label>
+            <select class="form-select" id="exp2-origin-node">
+              <option value="A" selected>Hub A</option>
+              <option value="B">Hub B</option>
+              <option value="C">Hub C</option>
+              <option value="D">Hub D</option>
+              <option value="E">Hub E</option>
+              <option value="F">Hub F</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-rm-primary" onclick="RouteMindExps.runExp2()" style="width: 100%; justify-content: center;">
+          <i class="bi bi-play-fill"></i> Execute Prolog Deduction
+        </button>
+      </div>
+
+      <!-- Code & Deduction Output -->
+      <div>
+        <label class="form-label">Deduction Results & Proof Tree:</label>
+        <div class="code-output" id="exp2-results-box" style="min-height: 240px;">
+% Ready. Select a query and click "Execute Prolog Deduction".
+% Rule logic verifies:
+% 1. road(X, Y, ..., unblocked)
+% 2. can_dispatch_high_priority(X, Y) :- Cong =< 60%
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 3: UNINFORMED SEARCH (BFS vs DFS)
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp3" style="display: none;">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-diagram-3 text-teal"></i>
+        <span>Experiment 3 — Uninformed Search: BFS & DFS</span>
+      </div>
+      <span class="badge-rm info">Blind Search Strategies</span>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 16px;">
+      Examines genuine Breadth-First Search (FIFO queue, guarantees fewest edges) and Depth-First Search (LIFO stack, dives deep before backtracking; does NOT guarantee shortest path).
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Algorithm Choice:</label>
+          <select class="form-select" id="exp3-algo">
+            <option value="bfs" selected>Breadth-First Search (BFS - Queue)</option>
+            <option value="dfs">Depth-First Search (DFS - Stack)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Start Hub:</label>
+          <select class="form-select" id="exp3-start">
+            <option value="A" selected>Hub A</option>
+            <option value="B">Hub B</option>
+            <option value="D">Hub D</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Goal Hub:</label>
+          <select class="form-select" id="exp3-goal">
+            <option value="G" selected>Hub G</option>
+            <option value="E">Hub E</option>
+            <option value="F">Hub F</option>
+          </select>
+        </div>
+        <button class="btn-rm-primary" onclick="RouteMindExps.runExp3()" style="width: 100%; justify-content: center;">
+          <i class="bi bi-play-circle"></i> Run Uninformed Search
+        </button>
+      </div>
+
+      <div>
+        <div id="exp3-metrics-box" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px;">
+          <div style="background: var(--rm-surface-subtle); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 10px; color: var(--rm-text-muted);">Hops (Edges)</div>
+            <div class="mono-data" style="font-size: 18px; font-weight: 700;" id="exp3-res-edges">--</div>
+          </div>
+          <div style="background: var(--rm-surface-subtle); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 10px; color: var(--rm-text-muted);">Distance</div>
+            <div class="mono-data" style="font-size: 18px; font-weight: 700;" id="exp3-res-dist">-- km</div>
+          </div>
+          <div style="background: var(--rm-surface-subtle); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 10px; color: var(--rm-text-muted);">Est. Time</div>
+            <div class="mono-data" style="font-size: 18px; font-weight: 700;" id="exp3-res-time">-- min</div>
+          </div>
+          <div style="background: var(--rm-surface-subtle); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 10px; color: var(--rm-text-muted);">Nodes Explored</div>
+            <div class="mono-data" style="font-size: 18px; font-weight: 700;" id="exp3-res-explored">--</div>
+          </div>
+        </div>
+
+        <label class="form-label">Step-by-Step Traversal Trace:</label>
+        <div class="code-output" id="exp3-trace-box" style="height: 180px;">
+// Select parameters and run to view frontier queue/stack operations.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 4: INFORMED SEARCH (A*)
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp4" style="display: none;">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-compass-fill text-teal"></i>
+        <span>Experiment 4 — Informed Search: A* Algorithm (f = g + h)</span>
+      </div>
+      <span class="badge-rm optimal">Admissible & Optimal</span>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 16px;">
+      Evaluates nodes using priority function <strong>f(n) = g(n) + h(n)</strong>, where g(n) is cumulative travel time and h(n) is the admissible straight-line heuristic to Goal G.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Start Hub:</label>
+          <select class="form-select" id="exp4-start">
+            <option value="A" selected>Hub A (Central Warehouse)</option>
+            <option value="B">Hub B</option>
+            <option value="D">Hub D</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Goal Hub:</label>
+          <select class="form-select" id="exp4-goal">
+            <option value="G" selected>Hub G (Delivery Hub)</option>
+            <option value="E">Hub E</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cost Optimization Target:</label>
+          <select class="form-select" id="exp4-criterion">
+            <option value="time" selected>Travel Time (minutes)</option>
+            <option value="weighted_cost">Congestion-Adjusted Cost</option>
+          </select>
+        </div>
+        <button class="btn-rm-primary" onclick="RouteMindExps.runExp4()" style="width: 100%; justify-content: center;">
+          <i class="bi bi-play-circle"></i> Run A* Algorithm
+        </button>
+      </div>
+
+      <div>
+        <label class="form-label">A* Priority Queue Evaluation Table:</label>
+        <div style="max-height: 240px; overflow-y: auto; border: 1px solid var(--rm-border); border-radius: 8px;">
+          <table class="table-rm" id="exp4-eval-table">
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Node</th>
+                <th>g(n) [Time]</th>
+                <th>h(n) [Heuristic]</th>
+                <th>f(n) = g + h</th>
+                <th>Open Set Size</th>
+              </tr>
+            </thead>
+            <tbody id="exp4-eval-table-body">
+              <tr><td colspan="6" style="text-align: center; color: var(--rm-text-muted); padding: 20px;">Run A* to inspect node evaluations.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 5: MINIMAX DECISION TREE
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp5" style="display: none;">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-controller text-teal"></i>
+        <span>Experiment 5 — Minimax Adversarial Decision Tree</span>
+      </div>
+      <span class="badge-rm warning">Educational Decision Model</span>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 16px;">
+      Educational game-theoretic simulation: MAX is the Dispatcher choosing high-level dispatch corridors; MIN is the adverse traffic/weather environment choosing worst-case chokepoints.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <div>
+        <h4 style="font-size: 14px; margin-bottom: 10px;">Adjust Leaf Utilities (Payoffs to Dispatcher):</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
+          <div>
+            <label class="form-label" style="font-size: 11px;">North Exp - Light Traffic:</label>
+            <input type="number" class="form-control" id="minimax-leaf-1" value="85">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 11px;">North Exp - Rain Bottleneck:</label>
+            <input type="number" class="form-control" id="minimax-leaf-2" value="40">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 11px;">Central Arterial - Normal:</label>
+            <input type="number" class="form-control" id="minimax-leaf-3" value="70">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 11px;">Central Arterial - Peak Surge:</label>
+            <input type="number" class="form-control" id="minimax-leaf-4" value="65">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 11px;">Industrial Bypass - Open Flow:</label>
+            <input type="number" class="form-control" id="minimax-leaf-5" value="90">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 11px;">Industrial Bypass - Rail Crossing:</label>
+            <input type="number" class="form-control" id="minimax-leaf-6" value="30">
+          </div>
+        </div>
+        <button class="btn-rm-primary" onclick="RouteMindExps.runExp5()" style="margin-top: 14px; width: 100%; justify-content: center;">
+          <i class="bi bi-play-circle"></i> Evaluate Minimax Values
+        </button>
+      </div>
+
+      <div>
+        <div style="background: var(--rm-surface-subtle); padding: 16px; border-radius: 10px; border: 1px solid var(--rm-border); margin-bottom: 14px;">
+          <div style="font-size: 12px; color: var(--rm-text-muted);">Optimal Guaranteed Utility (Root Value):</div>
+          <div class="mono-data" style="font-size: 26px; font-weight: 700; color: var(--rm-teal);" id="minimax-root-utility">--</div>
+          <div style="font-size: 13px; font-weight: 600; color: var(--rm-text-heading); margin-top: 4px;" id="minimax-best-decision">--</div>
+        </div>
+
+        <label class="form-label">Minimax Backward Induction Log:</label>
+        <div class="code-output" id="minimax-log-box" style="height: 140px;">
+// Evaluates MAX -> MIN -> Leaf values.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 6: FUZZY LOGIC CONTROLLER
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp6" style="display: none;">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-bezier2 text-teal"></i>
+        <span>Experiment 6 — Fuzzy Logic Controller (Traffic & Road Delay)</span>
+      </div>
+      <span class="badge-rm optimal">Mamdani Centroid Defuzzification</span>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 16px;">
+      Fuzzy Inference System classifying continuous road conditions into linguistic categories (Low, Medium, High) and defuzzifying a crisp delay score (0–100).
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Congestion Level (%): <span class="mono-data" id="exp6-cong-val">65%</span></label>
+          <input type="range" class="form-range" style="width:100%;" min="0" max="100" value="65" id="exp6-cong-slider" oninput="document.getElementById('exp6-cong-val').innerText = this.value + '%'">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Road Condition (1=Severe Potholes, 10=Pristine Highway): <span class="mono-data" id="exp6-cond-val">4.5</span></label>
+          <input type="range" class="form-range" style="width:100%;" min="1" max="10" step="0.5" value="4.5" id="exp6-cond-slider" oninput="document.getElementById('exp6-cond-val').innerText = this.value">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Inference Engine:</label>
+          <select class="form-select" id="exp6-engine">
+            <option value="auto" selected>Automatic (scikit-fuzzy if available, else pure Python)</option>
+            <option value="pure_python">Pure Python Mamdani Centroid Engine</option>
+          </select>
+        </div>
+
+        <button class="btn-rm-primary" onclick="RouteMindExps.runExp6()" style="width: 100%; justify-content: center;">
+          <i class="bi bi-play-circle"></i> Evaluate Fuzzy Controller
+        </button>
+      </div>
+
+      <div>
+        <div style="background: var(--rm-surface-subtle); padding: 18px; border-radius: 10px; border: 1px solid var(--rm-border); margin-bottom: 14px;">
+          <div style="font-size: 12px; color: var(--rm-text-muted);">Defuzzified Delay Score (0–100):</div>
+          <div class="mono-data" style="font-size: 30px; font-weight: 700;" id="exp6-score-display">--</div>
+          <div style="margin-top: 6px;">
+            <span class="badge-rm optimal" id="exp6-cat-badge">--</span>
+          </div>
+        </div>
+
+        <label class="form-label">Membership Degrees & Activated Rules:</label>
+        <div class="code-output" id="exp6-details-box" style="height: 130px;">
+// Run controller to view mu(Low), mu(Medium), mu(High) membership values.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 7: MAMDANI VS SUGENO FUZZY INFERENCE
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp7" style="display: none;">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-bar-chart-steps text-teal"></i>
+        <span>Experiment 7 — Mamdani vs Sugeno Fuzzy Inference Comparison</span>
+      </div>
+      <span class="badge-rm info">Side-by-Side Inference Benchmarking</span>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 16px;">
+      Direct comparison between <strong>Mamdani</strong> (linguistic output sets & continuous centroid integration) and <strong>Sugeno</strong> (crisp linear functions & weighted average defuzzification) on an identical route scenario.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Route Distance (5 to 50 km): <span class="mono-data" id="exp7-dist-val">28 km</span></label>
+          <input type="range" class="form-range" style="width:100%;" min="5" max="50" value="28" id="exp7-dist-slider" oninput="document.getElementById('exp7-dist-val').innerText = this.value + ' km'">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Traffic Congestion (0 to 100%): <span class="mono-data" id="exp7-cong-val">60%</span></label>
+          <input type="range" class="form-range" style="width:100%;" min="0" max="100" value="60" id="exp7-cong-slider" oninput="document.getElementById('exp7-cong-val').innerText = this.value + '%'">
+        </div>
+        <button class="btn-rm-primary" onclick="RouteMindExps.runExp7()" style="width: 100%; justify-content: center;">
+          <i class="bi bi-play-circle"></i> Compare Mamdani vs Sugeno
+        </button>
+      </div>
+
+      <div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 8px; border-left: 3px solid var(--rm-teal);">
+            <div style="font-size: 12px; font-weight: 600;">Mamdani Output (Centroid)</div>
+            <div class="mono-data" style="font-size: 22px; font-weight: 700; color: var(--rm-teal);" id="exp7-mamdani-out">-- min</div>
+            <div style="font-size: 11px; color: var(--rm-text-muted); margin-top: 4px;">Fuzzy output membership set</div>
+          </div>
+          <div style="background: var(--rm-surface-subtle); padding: 14px; border-radius: 8px; border-left: 3px solid var(--rm-cyan);">
+            <div style="font-size: 12px; font-weight: 600;">Sugeno Output (Weighted Avg)</div>
+            <div class="mono-data" style="font-size: 22px; font-weight: 700; color: var(--rm-cyan);" id="exp7-sugeno-out">-- min</div>
+            <div style="font-size: 11px; color: var(--rm-text-muted); margin-top: 4px;">Crisp linear equations z = a*x + b*y + c</div>
+          </div>
+        </div>
+
+        <div class="code-output" id="exp7-comparison-box" style="height: 140px;">
+// Run comparison to view fired rule strengths and mathematical breakdown.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 8: HYBRID NEURO-FUZZY SYSTEM
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp8" style="display: none;">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-diagram-3-fill text-teal"></i>
+        <span>Experiment 8 — Hybrid Neuro-Fuzzy Delay Estimator</span>
+      </div>
+      <span class="badge-rm optimal">ANN Learning + Fuzzy Supervisor</span>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 16px;">
+      Synergizes an Artificial Neural Network (learning baseline transit delay from synthetic dispatch data) with a Fuzzy Supervisory Layer applying contextual risk rules.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Distance (km):</label>
+          <input type="number" class="form-control" id="exp8-dist" value="25.0" step="1.0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Congestion (%):</label>
+          <input type="number" class="form-control" id="exp8-cong" value="65" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weather Risk Condition:</label>
+          <select class="form-select" id="exp8-weather">
+            <option value="low">Clear Weather (Low Risk)</option>
+            <option value="moderate" selected>Overcast / Light Rain (Moderate)</option>
+            <option value="severe">Heavy Storm / Flooding (Severe)</option>
+          </select>
+        </div>
+        <button class="btn-rm-primary" onclick="RouteMindExps.runExp8()" style="width: 100%; justify-content: center;">
+          <i class="bi bi-play-circle"></i> Evaluate Neuro-Fuzzy Pipeline
+        </button>
+      </div>
+
+      <div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px;">
+          <div style="background: var(--rm-surface-subtle); padding: 12px; border-radius: 8px;">
+            <div style="font-size: 11px; color: var(--rm-text-muted);">Neural Net Estimate</div>
+            <div class="mono-data" style="font-size: 20px; font-weight: 700;" id="exp8-nn-pred">-- min</div>
+          </div>
+          <div style="background: var(--rm-surface-subtle); padding: 12px; border-radius: 8px;">
+            <div style="font-size: 11px; color: var(--rm-text-muted);">Fuzzy Adjustment</div>
+            <div class="mono-data" style="font-size: 20px; font-weight: 700; color: #f59e0b;" id="exp8-fuzzy-adj">-- min</div>
+          </div>
+          <div style="background: var(--rm-surface-subtle); padding: 12px; border-radius: 8px;">
+            <div style="font-size: 11px; color: var(--rm-text-muted);">Final Hybrid Delay</div>
+            <div class="mono-data" style="font-size: 20px; font-weight: 700; color: var(--rm-teal);" id="exp8-hybrid-pred">-- min</div>
+          </div>
+        </div>
+
+        <div class="code-output" id="exp8-details-box" style="height: 160px;">
+// Evaluates Neural Network baseline and Fuzzy supervisory rules.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 9: SUPERVISED & UNSUPERVISED NEURAL NETWORKS
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp9" style="display: none;">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-cpu text-teal"></i>
+        <span>Experiment 9 — Supervised Perceptron & Unsupervised Clustering</span>
+      </div>
+      <span class="badge-rm info">Neural Learning Paradigms</span>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 16px;">
+      Examines two core neural architectures: <strong>Supervised Rosenblatt Perceptron</strong> (classification with labeled feedback) and <strong>Unsupervised Competitive Learning</strong> (clustering unlabeled corridor observations).
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <!-- Supervised -->
+      <div style="border: 1px solid var(--rm-border); padding: 16px; border-radius: 10px;">
+        <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--rm-teal);">
+          <i class="bi bi-check2-circle"></i> Part A: Supervised Perceptron
+        </h4>
+        <div style="font-size: 12px; margin-bottom: 10px;">
+          Classifies test corridor as Normal (0) or High Delay (1):
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+          <div>
+            <label style="font-size: 10px; font-weight: 600;">Dist (km):</label>
+            <input type="number" class="form-control" id="exp9-dist" value="22.0">
+          </div>
+          <div>
+            <label style="font-size: 10px; font-weight: 600;">Cong (%):</label>
+            <input type="number" class="form-control" id="exp9-cong" value="65.0">
+          </div>
+          <div>
+            <label style="font-size: 10px; font-weight: 600;">Cond (1-10):</label>
+            <input type="number" class="form-control" id="exp9-cond" value="4.0">
+          </div>
+        </div>
+        <button class="btn-rm-primary" onclick="RouteMindExps.runExp9Supervised()" style="width: 100%; justify-content: center;">
+          <i class="bi bi-play-fill"></i> Train & Predict Perceptron
+        </button>
+        <div class="code-output" id="exp9-sup-box" style="height: 140px; margin-top: 10px;">
+// Perceptron training log and classification result.
+        </div>
+      </div>
+
+      <!-- Unsupervised -->
+      <div style="border: 1px solid var(--rm-border); padding: 16px; border-radius: 10px;">
+        <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--rm-cyan);">
+          <i class="bi bi-bullseye"></i> Part B: Unsupervised Competitive Learning
+        </h4>
+        <div style="font-size: 12px; margin-bottom: 10px;">
+          Clusters 24 unlabeled road corridors into K=3 distinct archetypes:
+        </div>
+        <button class="btn-rm-secondary" onclick="RouteMindExps.runExp9Unsupervised()" style="width: 100%; justify-content: center; margin-bottom: 10px;">
+          <i class="bi bi-shuffle"></i> Run Competitive Vector Quantization
+        </button>
+        <div class="code-output" id="exp9-unsup-box" style="height: 185px;">
+// Winner-Take-All competitive clustering centroids.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     EXPERIMENT 10: SMALL & MICRO LANGUAGE MODELS
+     ========================================================================== -->
+<div class="experiment-pane" id="pane-exp10" style="display: none;">
+  <div class="card-panel">
+    <div class="card-header-flex">
+      <div class="card-title">
+        <i class="bi bi-chat-left-text-fill text-teal"></i>
+        <span>Experiment 10 — Small & Micro Statistical Language Models</span>
+      </div>
+      <span class="badge-rm optimal">Local Domain N-Gram NLP</span>
+    </div>
+    <p style="color: var(--rm-text-muted); font-size: 13px; margin-bottom: 16px;">
+      Lightweight statistical text prediction on local logistics corpus: <strong>Micro Model (Bigram: N=2)</strong> and <strong>Small Model (Trigram: N=3)</strong> with conditional probability counting.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Seed Context Phrase:</label>
+          <input type="text" class="form-control" id="exp10-prompt" value="high priority" placeholder="e.g. high priority, central warehouse">
+        </div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;">
+          <button class="badge-rm info" style="cursor: pointer; border: none;" onclick="document.getElementById('exp10-prompt').value='high priority';">high priority</button>
+          <button class="badge-rm info" style="cursor: pointer; border: none;" onclick="document.getElementById('exp10-prompt').value='central warehouse';">central warehouse</button>
+          <button class="badge-rm info" style="cursor: pointer; border: none;" onclick="document.getElementById('exp10-prompt').value='traffic congestion';">traffic congestion</button>
+          <button class="badge-rm info" style="cursor: pointer; border: none;" onclick="document.getElementById('exp10-prompt').value='final delivery';">final delivery</button>
+        </div>
+        <button class="btn-rm-primary" onclick="RouteMindExps.runExp10()" style="width: 100%; justify-content: center;">
+          <i class="bi bi-play-circle"></i> Generate Predictions
+        </button>
+      </div>
+
+      <div>
+        <label class="form-label">Top Token Probabilities & Text Completions:</label>
+        <div class="code-output" id="exp10-results-box" style="height: 220px;">
+// Enter context phrase and click "Generate Predictions" to view Bigram and Trigram probabilities.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  function switchExperimentTab(expId) {
+    document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.experiment-pane').forEach(pane => pane.style.display = 'none');
+    
+    const activeBtn = document.getElementById('tab-btn-' + expId);
+    const activePane = document.getElementById('pane-' + expId);
+    if (activeBtn) activeBtn.classList.add('active');
+    if (activePane) activePane.style.display = 'block';
+  }
+</script>
+<script src="{{ url_for('static', filename='js/experiments.js') }}"></script>
+{% endblock %}

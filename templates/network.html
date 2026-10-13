@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}RouteMind AI — Network Topology Editor{% endblock %}
+
+{% block page_header_title %}Distribution Network Topology Editor{% endblock %}
+{% block page_header_desc %}Manage Hubs, Road Segments, Transit Times, Congestion Levels & Emergency Closures{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+  
+  <!-- LEFT: Roads Table & Edit Controls -->
+  <div>
+    <div class="card-panel">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-bezier text-teal"></i>
+          <span>Active Road Corridors</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-rm-secondary" onclick="RouteMindEditor.resetNetwork()">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset to Defaults
+          </button>
+        </div>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table class="table-rm" id="network-editor-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>From &rarr; To</th>
+              <th>Distance</th>
+              <th>Travel Time</th>
+              <th>Congestion</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="network-editor-body">
+            {% for r in network.roads %}
+            <tr id="row-road-{{ r.id }}">
+              <td class="mono-data"><strong>{{ r.id }}</strong></td>
+              <td>Hub {{ r.from }} &harr; Hub {{ r.to }}</td>
+              <td>
+                <input type="number" class="form-control" style="width: 80px; height: 32px; font-size: 13px;" 
+                       id="edit-dist-{{ r.id }}" value="{{ r.distance_km }}" step="0.5">
+              </td>
+              <td>
+                <input type="number" class="form-control" style="width: 80px; height: 32px; font-size: 13px;" 
+                       id="edit-time-{{ r.id }}" value="{{ r.time_min }}" step="1">
+              </td>
+              <td>
+                <input type="number" class="form-control" style="width: 70px; height: 32px; font-size: 13px;" 
+                       id="edit-cong-{{ r.id }}" value="{{ r.congestion_pct }}" min="0" max="100">
+              </td>
+              <td>
+                <button class="badge-rm {% if r.is_blocked %}danger{% else %}success{% endif %}" 
+                        style="cursor: pointer; border: none;"
+                        id="editor-btn-block-{{ r.id }}"
+                        onclick="RouteMindEditor.toggleBlock('{{ r.id }}')">
+                  {{ 'BLOCKED' if r.is_blocked else 'OPEN' }}
+                </button>
+              </td>
+              <td>
+                <div style="display: flex; gap: 6px;">
+                  <button class="btn-rm-secondary" style="padding: 4px 8px; font-size: 11px;" title="Save Edits"
+                          onclick="RouteMindEditor.saveRoad('{{ r.id }}')">
+                    <i class="bi bi-check-lg"></i>
+                  </button>
+                  <button class="btn-rm-danger" style="padding: 4px 8px; font-size: 11px;" title="Delete Road"
+                          onclick="RouteMindEditor.deleteRoad('{{ r.id }}')">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Add New Road & Network Info -->
+  <div>
+    <!-- Add Road Form -->
+    <div class="card-panel">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-plus-circle-fill text-teal"></i>
+          <span>Add Road Corridor</span>
+        </div>
+      </div>
+      <form id="add-road-form" onsubmit="event.preventDefault(); RouteMindEditor.addRoad();">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label">From Hub:</label>
+            <select class="form-select" id="new-road-from">
+              {% for node in network.nodes %}
+              <option value="{{ node.id }}">Hub {{ node.id }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">To Hub:</label>
+            <select class="form-select" id="new-road-to">
+              {% for node in network.nodes %}
+              <option value="{{ node.id }}" {% if node.id == 'C' %}selected{% endif %}>Hub {{ node.id }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Distance (km):</label>
+          <input type="number" class="form-control" id="new-road-dist" value="15.0" step="0.5" min="0.5">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Estimated Transit Time (min):</label>
+          <input type="number" class="form-control" id="new-road-time" value="20.0" step="1.0" min="1.0">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Congestion (%):</label>
+          <input type="number" class="form-control" id="new-road-cong" value="25" min="0" max="100">
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+          <input type="checkbox" id="new-road-blocked" style="width: 16px; height: 16px;">
+          <label for="new-road-blocked" style="font-size: 13px; font-weight: 500; cursor: pointer;">Initialize as Blocked</label>
+        </div>
+
+        <button type="submit" class="btn-rm-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+          <i class="bi bi-plus-lg"></i> Add Road Segment
+        </button>
+      </form>
+    </div>
+
+    <!-- Hub Inventory Summary -->
+    <div class="card-panel">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-geo-fill text-teal"></i>
+          <span>Hub Inventory (7 Nodes)</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
+        {% for node in network.nodes %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--rm-surface-subtle); border-radius: 6px;">
+          <div>
+            <strong style="color: var(--rm-teal);">Hub {{ node.id }}</strong> — {{ node.name }}
+          </div>
+          <span class="mono-data" style="color: var(--rm-text-muted);">Cap: {{ node.capacity }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+{% endblock %}

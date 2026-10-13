@@ -1,0 +1,196 @@
+{
+  "nodes": [
+    {
+      "id": "A",
+      "name": "Central Dispatch Warehouse",
+      "code": "A",
+      "role": "Origin / Central Warehouse",
+      "x": 120,
+      "y": 300,
+      "capacity": 500,
+      "status": "active"
+    },
+    {
+      "id": "B",
+      "name": "North Junction",
+      "code": "B",
+      "role": "Transit Hub North",
+      "x": 320,
+      "y": 150,
+      "capacity": 250,
+      "status": "active"
+    },
+    {
+      "id": "C",
+      "name": "East Junction",
+      "code": "C",
+      "role": "Express Corridor East",
+      "x": 580,
+      "y": 150,
+      "capacity": 200,
+      "status": "active"
+    },
+    {
+      "id": "D",
+      "name": "Industrial Hub",
+      "code": "D",
+      "role": "Freight Logistics South-West",
+      "x": 320,
+      "y": 450,
+      "capacity": 350,
+      "status": "active"
+    },
+    {
+      "id": "E",
+      "name": "City Centre Hub",
+      "code": "E",
+      "role": "Metropolitan Distribution Center",
+      "x": 540,
+      "y": 300,
+      "capacity": 400,
+      "status": "active"
+    },
+    {
+      "id": "F",
+      "name": "South Junction",
+      "code": "F",
+      "role": "Transit Hub South-East",
+      "x": 720,
+      "y": 450,
+      "capacity": 200,
+      "status": "active"
+    },
+    {
+      "id": "G",
+      "name": "Final Delivery Hub",
+      "code": "G",
+      "role": "Destination / Delivery Center",
+      "x": 820,
+      "y": 270,
+      "capacity": 600,
+      "status": "active"
+    }
+  ],
+  "roads": [
+    {
+      "id": "A-B",
+      "from": "A",
+      "to": "B",
+      "distance_km": 12.0,
+      "time_min": 15.0,
+      "congestion_pct": 25,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "A-D",
+      "from": "A",
+      "to": "D",
+      "distance_km": 14.0,
+      "time_min": 18.0,
+      "congestion_pct": 30,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "B-C",
+      "from": "B",
+      "to": "C",
+      "distance_km": 18.0,
+      "time_min": 22.0,
+      "congestion_pct": 20,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "B-D",
+      "from": "B",
+      "to": "D",
+      "distance_km": 15.0,
+      "time_min": 20.0,
+      "congestion_pct": 40,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "B-E",
+      "from": "B",
+      "to": "E",
+      "distance_km": 16.0,
+      "time_min": 25.0,
+      "congestion_pct": 55,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "C-E",
+      "from": "C",
+      "to": "E",
+      "distance_km": 12.0,
+      "time_min": 16.0,
+      "congestion_pct": 45,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "C-G",
+      "from": "C",
+      "to": "G",
+      "distance_km": 16.0,
+      "time_min": 20.0,
+      "congestion_pct": 35,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "D-E",
+      "from": "D",
+      "to": "E",
+      "distance_km": 15.0,
+      "time_min": 18.0,
+      "congestion_pct": 30,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "D-F",
+      "from": "D",
+      "to": "F",
+      "distance_km": 20.0,
+      "time_min": 24.0,
+      "congestion_pct": 20,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "E-G",
+      "from": "E",
+      "to": "G",
+      "distance_km": 14.0,
+      "time_min": 16.0,
+      "congestion_pct": 40,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "E-F",
+      "from": "E",
+      "to": "F",
+      "distance_km": 13.0,
+      "time_min": 17.0,
+      "congestion_pct": 25,
+      "is_blocked": false,
+      "bidirectional": true
+    },
+    {
+      "id": "F-G",
+      "from": "F",
+      "to": "G",
+      "distance_km": 12.0,
+      "time_min": 15.0,
+      "congestion_pct": 25,
+      "is_blocked": false,
+      "bidirectional": true
+    }
+  ]
+}

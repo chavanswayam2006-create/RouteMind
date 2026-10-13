@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}RouteMind AI — Architecture & Demonstration Guide{% endblock %}
+
+{% block page_header_title %}About RouteMind AI — System Architecture & Lab Guide{% endblock %}
+{% block page_header_desc %}Comprehensive AI Lab Project Architecture, Stitch AI Design Workflow & Faculty Demonstration Guide{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+  
+  <div>
+    <!-- System Architecture -->
+    <div class="card-panel">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-layers-fill text-teal"></i>
+          <span>System Architecture & Engineering Design</span>
+        </div>
+        <span class="badge-rm optimal">Python 3 + Flask + Cytoscape.js</span>
+      </div>
+      <p style="font-size: 13px; color: var(--rm-text-body); margin-bottom: 14px;">
+        RouteMind AI is structured as a modular, decoupled AI demonstration system designed for academic rigor, transparent inspectability, and ease of demonstration on Windows systems.
+      </p>
+
+      <div style="background: var(--rm-surface-subtle); padding: 16px; border-radius: 10px; border: 1px solid var(--rm-border); margin-bottom: 18px;">
+        <h4 style="font-size: 14px; margin-bottom: 8px;">Architecture Highlights:</h4>
+        <ul style="font-size: 13px; padding-left: 20px; line-height: 1.7;">
+          <li><strong>Backend Engine:</strong> Python 3.x Flask server orchestrating 10 distinct, self-contained AI modules.</li>
+          <li><strong>Graph Search Layer:</strong> Pure-Python implementations of Breadth-First Search (BFS), Depth-First Search (DFS), and A* Informed Search with Euclidean admissible heuristics.</li>
+          <li><strong>Knowledge & Logic Layer:</strong> ISO Prolog knowledge base exporter (`.pl`) paired with a high-fidelity Python Horn-clause unification and resolution engine (with automatic SWI-Prolog detection).</li>
+          <li><strong>Fuzzy Intelligence:</strong> Mamdani Centroid Controller & Sugeno Weighted-Average Inference using scikit-fuzzy with pure-Python fallbacks.</li>
+          <li><strong>Machine Learning:</strong> NumPy-based Multi-Layer Perceptron (Neuro-Fuzzy delay estimator), Rosenblatt Perceptron learning rule from scratch, and Winner-Take-All competitive clustering.</li>
+          <li><strong>Local NLP:</strong> Zero-dependency statistical Bigram (Micro) and Trigram (Small) language models trained on domain logistics text.</li>
+        </ul>
+      </div>
+
+      <!-- Stitch AI Design System Specification -->
+      <div class="card-header-flex" style="margin-top: 24px;">
+        <div class="card-title">
+          <i class="bi bi-palette-fill text-teal"></i>
+          <span>Google Stitch AI Design System Workflow</span>
+        </div>
+        <span class="badge-rm info">Stitch MCP Project 5399150869426497947</span>
+      </div>
+      <p style="font-size: 13px; color: var(--rm-text-body); margin-bottom: 12px;">
+        The frontend UI was designed using <strong>Google Stitch AI</strong> via the Model Context Protocol (Stitch MCP). Stitch generated the high-fidelity design theme titled <em>"RouteMind Precision Logistics"</em> with the following design tokens:
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 12px; margin-bottom: 16px;">
+        <div style="background: var(--rm-surface-subtle); padding: 10px; border-radius: 8px;">
+          <strong>Command Deck</strong><br>
+          <span class="mono-data">#0B132B / #1C2541</span><br>
+          Deep navy slate for ambient focus
+        </div>
+        <div style="background: var(--rm-surface-subtle); padding: 10px; border-radius: 8px;">
+          <strong>Algorithmic Teal</strong><br>
+          <span class="mono-data">#0D9488 / #06B6D4</span><br>
+          Optimal paths & machine intelligence
+        </div>
+        <div style="background: var(--rm-surface-subtle); padding: 10px; border-radius: 8px;">
+          <strong>Workspace Canvas</strong><br>
+          <span class="mono-data">#F8FAFC / #FFFFFF</span><br>
+          Crisp neutral data surfaces
+        </div>
+      </div>
+
+      <div style="background: #0f172a; padding: 14px; border-radius: 8px; color: #38bdf8; font-family: var(--rm-font-mono); font-size: 11px; margin-bottom: 14px;">
+        // Ready-to-paste Stitch AI Design Prompt:
+        "Design a polished, modern AI logistics dashboard called RouteMind AI. It is a desktop-first package routing and dispatch application for a city distribution network. Use a clean enterprise logistics aesthetic with a deep navy sidebar, light neutral workspace, cyan and teal accents, rounded cards, subtle shadows, clear typography, and accessible contrast. Create a collapsible sidebar containing Dashboard, Route Planner, AI Experiments, Network Editor, and About Project..."
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Faculty Demonstration Guide & Viva Questions -->
+  <div>
+    <div class="card-panel">
+      <div class="card-header-flex">
+        <div class="card-title">
+          <i class="bi bi-mortarboard-fill text-teal"></i>
+          <span>Faculty Demonstration Guide</span>
+        </div>
+        <span class="badge-rm optimal">Viva Prep</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; font-size: 13px;">
+        <div style="background: var(--rm-surface-subtle); padding: 12px; border-radius: 8px;">
+          <strong style="color: var(--rm-text-heading);">1. How to Demonstrate Route Optimality:</strong>
+          <p style="font-size: 12px; color: var(--rm-text-body); margin-top: 4px;">
+            Go to the Dashboard. Click "Find Best Route" with A*. Point out the optimal travel time (52 min via A &rarr; D &rarr; E &rarr; G). Then run BFS (finds 3 hops via A &rarr; B &rarr; C &rarr; G: 57 min). Explain that BFS minimizes edge count, while A* minimizes accumulated travel time!
+          </p>
+        </div>
+
+        <div style="background: var(--rm-surface-subtle); padding: 12px; border-radius: 8px;">
+          <strong style="color: var(--rm-text-heading);">2. How to Demonstrate Blocked Avoidance:</strong>
+          <p style="font-size: 12px; color: var(--rm-text-body); margin-top: 4px;">
+            On the dashboard or Network Editor, click "BLOCKED" on segment <strong>D-E</strong>. Re-run A*. The system automatically detours via <strong>A &rarr; B &rarr; E &rarr; G</strong> (56 min) with zero crashes!
+          </p>
+        </div>
+
+        <div style="background: var(--rm-surface-subtle); padding: 12px; border-radius: 8px;">
+          <strong style="color: var(--rm-text-heading);">3. Expected Viva Questions:</strong>
+          <ul style="font-size: 12px; color: var(--rm-text-body); padding-left: 16px; margin-top: 4px; line-height: 1.5;">
+            <li><strong>Q: Why is A* heuristic admissible?</strong><br>A: Because straight-line distance scaled by speed never overestimates true remaining road transit time: h(n) &le; h*(n).</li>
+            <li><strong>Q: What is the difference between Mamdani & Sugeno?</strong><br>A: Mamdani defuzzifies continuous fuzzy membership sets (centroid); Sugeno evaluates crisp mathematical functions (weighted average).</li>
+            <li><strong>Q: Why use hybrid neuro-fuzzy?</strong><br>A: The neural network learns empirical physics from data, while the fuzzy layer enforces human-interpretable safety boundaries.</li>
+          </ul>
+        </div>
+
+        <div style="background: var(--rm-surface-subtle); padding: 12px; border-radius: 8px;">
+          <strong style="color: var(--rm-text-heading);">4. Academic Integrity & Data Notice:</strong>
+          <p style="font-size: 12px; color: var(--rm-text-muted); margin-top: 4px;">
+            All simulation values and neural datasets are generated synthetically for academic illustration. No live GPS or real-time road APIs are utilized. Runs 100% offline without API keys.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}RouteMind AI — Intelligent Package Routing & Dispatch System{% endblock %}</title>
+  
+  <!-- Typography from Stitch Design System -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Custom RouteMind CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  
+  <!-- Cytoscape.js & Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="app-container">
+    <!-- Pinned Enterprise Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">
+          <i class="bi bi-box-seam-fill"></i>
+        </div>
+        <div class="brand-text">
+          <h1>RouteMind AI</h1>
+          <span>Dispatch v2.4</span>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="{{ url_for('dashboard') }}" class="nav-item {% if page == 'dashboard' %}active{% endif %}" id="nav-dashboard">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="{{ url_for('experiments') }}" class="nav-item {% if page == 'experiments' %}active{% endif %}" id="nav-experiments">
+          <i class="bi bi-cpu-fill"></i>
+          <span>AI Experiments</span>
+          <span class="nav-badge">10 Labs</span>
+        </a>
+        <a href="{{ url_for('network_editor') }}" class="nav-item {% if page == 'network' %}active{% endif %}" id="nav-network">
+          <i class="bi bi-diagram-3-fill"></i>
+          <span>Network Editor</span>
+        </a>
+        <a href="{{ url_for('about') }}" class="nav-item {% if page == 'about' %}active{% endif %}" id="nav-about">
+          <i class="bi bi-info-circle-fill"></i>
+          <span>About Project</span>
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="system-status">
+          <div class="status-dot"></div>
+          <span>Autonomous Dispatch Online</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Viewport -->
+    <div class="main-viewport">
+      <header class="top-bar">
+        <div class="page-title">
+          <h2>{% block page_header_title %}Enterprise Routing Terminal{% endblock %}</h2>
+          <p>{% block page_header_desc %}Autonomous City Distribution Network & Algorithmic Dispatch Optimization{% endblock %}</p>
+        </div>
+        <div class="top-actions">
+          <span class="badge-rm optimal">
+            <i class="bi bi-shield-check"></i> High Priority Protocol Active
+          </span>
+          <button class="btn-rm-secondary" id="btn-quick-reset" onclick="RouteMindApp.resetNetwork()">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset Topology
+          </button>
+        </div>
+      </header>
+      
+      <main class="content-body">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <!-- Shared Global Data -->
+  <script id="network-data" type="application/json">{{ network|tojson if network else '{}' }}</script>
+  <script>
+    try {
+      const dataEl = document.getElementById('network-data');
+      window.INITIAL_NETWORK_DATA = dataEl ? JSON.parse(dataEl.textContent || '{}') : {};
+    } catch (e) {
+      window.INITIAL_NETWORK_DATA = {};
+    }
+  </script>
+  
+  <!-- Main Scripts -->
+  <script src="{{ url_for('static', filename='js/network.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
